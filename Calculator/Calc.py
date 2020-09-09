@@ -26,16 +26,16 @@ class CalcClass(QMainWindow, form_class):
         self.b_percentage.clicked.connect(self.b_percentageClick)
         self.b_factorial.clicked.connect(self.b_factorialClick)
         self.b_pi.clicked.connect(self.b_piClick)
-        self.b_e.clicked.connect(self.b_eClick)
         self.b_rec.clicked.connect(self.b_recClick)
         self.b_sin.clicked.connect(self.b_sinClick)
         self.b_cos.clicked.connect(self.b_cosClick)
         self.b_tan.clicked.connect(self.b_tanClick)
-        self.b_EXP.clicked.connect(self.b_EXPClick)
         self.b_ln.clicked.connect(self.b_lnClick)
         self.b_log.clicked.connect(self.b_logClick)
         self.b_route.clicked.connect(self.b_routeClick)
-        self.b_xy.clicked.connect(self.b_xyClick)
+        self.b_inch.clicked.connect(self.b_inchClick)
+        self.b_feet.clicked.connect(self.b_feetClick)
+        self.b_lbs.clicked.connect(self.b_lbsClick)
 
     def Nums(self):
         global num
@@ -99,32 +99,48 @@ class CalcClass(QMainWindow, form_class):
 
     def b_piClick(self):
         tmp = int(self.result.text())
-        if tmp == 0 or tmp == 1:
-            self.result.setText(str(math.pi))
-        else:
-            self.result.setText(str(tmp*math.pi))
-
-    def b_eClick(self):
+        self.result.setText(str(tmp*math.pi))
 
     def b_recClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(1/tmp))
 
     def b_sinClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(math.sin(tmp)))
 
     def b_cosClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(math.cos(tmp)))
 
     def b_tanClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(math.tan(tmp)))
 
-    def b_EXPClick(self):
 
     def b_lnClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(math.log(tmp)))
 
     def b_logClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(math.log10(tmp)))
 
     def b_routeClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(tmp**0.5))
 
-    def b_xyClick(self):
+    def b_inchClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(tmp/2.54))
 
+    def b_feetClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(tmp/30.48))
 
+    def b_lbsClick(self):
+        tmp = int(self.result.text())
+        self.result.setText(str(tmp*2.205))
 
 app = QApplication(sys.argv)
 myWindow = CalcClass(None)
