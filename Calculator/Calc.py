@@ -26,8 +26,6 @@ class CalcClass(QMainWindow, form_class):
         self.b_percentage.clicked.connect(self.b_percentageClick)
         self.b_factorial.clicked.connect(self.b_factorialClick)
         self.b_pi.clicked.connect(self.b_piClick)
-        '''
-
         self.b_e.clicked.connect(self.b_eClick)
         self.b_rec.clicked.connect(self.b_recClick)
         self.b_sin.clicked.connect(self.b_sinClick)
@@ -38,7 +36,6 @@ class CalcClass(QMainWindow, form_class):
         self.b_log.clicked.connect(self.b_logClick)
         self.b_route.clicked.connect(self.b_routeClick)
         self.b_xy.clicked.connect(self.b_xyClick)
-        '''
 
     def Nums(self):
         global num
@@ -90,20 +87,23 @@ class CalcClass(QMainWindow, form_class):
             self.result.setText(self.result.text() + ")")
 
     def b_percentageClick(self):
-        self.result.setText(self.result.text() + "%")
-        tmp = self.resut.text()[:-1]
-
-
-
-
+        self.result.setText(str(int(self.result.text()) * 0.01))
 
     def b_factorialClick(self):
-        self.result.setText(self.result.text() + "!")
-
+        tmp = int(self.result.text())
+        res = 1
+        while tmp:
+            res *= tmp
+            tmp -= 1
+        self.result.setText(str(res))
 
     def b_piClick(self):
-        self.result.setText(self.result.text() + "π")
-'''
+        tmp = int(self.result.text())
+        if tmp == 0 or tmp == 1:
+            self.result.setText(str(math.pi))
+        else:
+            self.result.setText(str(tmp*math.pi))
+
     def b_eClick(self):
 
     def b_recClick(self):
@@ -123,7 +123,7 @@ class CalcClass(QMainWindow, form_class):
     def b_routeClick(self):
 
     def b_xyClick(self):
-'''
+
 
 
 app = QApplication(sys.argv)
