@@ -52,7 +52,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>CE</string>
+        <string>C</string>
        </property>
       </widget>
      </item>

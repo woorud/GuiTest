@@ -2,6 +2,7 @@ import sys
 
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.uic import loadUiType
+import math
 
 form_class = loadUiType("my_calc.ui")[0]
 
@@ -24,8 +25,9 @@ class CalcClass(QMainWindow, form_class):
         self.b_rb.clicked.connect(self.b_rbClick)
         self.b_percentage.clicked.connect(self.b_percentageClick)
         self.b_factorial.clicked.connect(self.b_factorialClick)
-        '''
         self.b_pi.clicked.connect(self.b_piClick)
+        '''
+
         self.b_e.clicked.connect(self.b_eClick)
         self.b_rec.clicked.connect(self.b_recClick)
         self.b_sin.clicked.connect(self.b_sinClick)
@@ -76,24 +78,32 @@ class CalcClass(QMainWindow, form_class):
         self.result.setText(self.result.text() + ".")
 
     def b_lbClick(self):
-        self.result.setText("(" + self.result.text())
+        if self.result.text() == "0":
+            self.result.setText("(")
+        else:
+            self.result.setText(self.result.text() + "(")
 
     def b_rbClick(self):
-        self.result.setText(self.result.text() + ")")
+        if self.result.text() == "0":
+            self.result.setText(")")
+        else:
+            self.result.setText(self.result.text() + ")")
 
     def b_percentageClick(self):
         self.result.setText(self.result.text() + "%")
-        sender = self.sender()
-        newNum = int(sender.text()) / 100
-        setNum = str(newNum)
-        self.result.setText(setNum)
+        tmp = self.resut.text()[:-1]
+
+
+
+
 
     def b_factorialClick(self):
-        tmp = int(self.text())
-        self.result.setText(str(fact(tmp)))
-'''
-    def b_piClick(self):
+        self.result.setText(self.result.text() + "!")
 
+
+    def b_piClick(self):
+        self.result.setText(self.result.text() + "π")
+'''
     def b_eClick(self):
 
     def b_recClick(self):
@@ -114,12 +124,7 @@ class CalcClass(QMainWindow, form_class):
 
     def b_xyClick(self):
 '''
-def fact(n):
-    res = 1
-    while n != 0:
-        res *= n
-        n -= 1
-    return res
+
 
 app = QApplication(sys.argv)
 myWindow = CalcClass(None)
