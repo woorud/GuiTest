@@ -10,7 +10,7 @@ class ViewerClass(QMainWindow, form_class):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
         self.setupUi(self)
-        dbConn = pymysql.connect(user='root', passwd='rlaworud1~', host='127.0.0.1', db='iris', charset='utf8')
+        dbConn = pymysql.connect(user='######', passwd='######~', host='######', db='iris', charset='utf8')
         cursor = dbConn.cursor(pymysql.cursors.DictCursor)
         sql = "select a.SL, a.SW, a.PL, a.PW, b.Species_name from dataset a " \
               "left join flower b on a.species = b.species;"

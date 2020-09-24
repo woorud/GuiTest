@@ -1,6 +1,6 @@
 import pymysql
 import pandas as pd
-dbConn = pymysql.connect(user='root', passwd='rlaworud1~', host='127.0.0.1', db='iris', charset='utf8')
+dbConn = pymysql.connect(user='######', passwd='######', host='######', db='iris', charset='utf8')
 cursor = dbConn.cursor(pymysql.cursors.DictCursor)
 sql = "select count(*) from dataset;"
 cursor.execute(sql)
