@@ -89,6 +89,9 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="a_togray"/>
+    <addaction name="a_zi"/>
+    <addaction name="a_zo"/>
+    <addaction name="a_rotate"/>
    </widget>
    <addaction name="m_file"/>
    <addaction name="m_edit"/>
@@ -125,6 +128,21 @@
   <action name="a_exit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="a_zi">
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+  </action>
+  <action name="a_zo">
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+  </action>
+  <action name="a_rotate">
+   <property name="text">
+    <string>Rotate 90</string>
    </property>
   </action>
  </widget>

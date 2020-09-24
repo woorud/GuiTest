@@ -1,12 +1,10 @@
 import sys
 import cv2
-import glob
 import os
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter
-from PyQt5.QtWidgets import QLabel, QSizePolicy, QScrollArea, QMessageBox, QMainWindow, QMenu, QAction, \
-    qApp, QFileDialog, QApplication
+from PyQt5.QtGui import QImage, QPixmap, QTransform
+from PyQt5.QtWidgets import QMessageBox, QMainWindow, QFileDialog, QApplication
 from PyQt5.uic import loadUiType
 
 form_class = loadUiType("Image Viewer.ui")[0]
@@ -27,14 +25,24 @@ class ImageViewer(QMainWindow, form_class):
         QMainWindow.__init__(self, parent)
         self.setupUi(self)
 
+        self.scaleFactor = 0.0
+        # file
         self.a_fileselect.triggered.connect(self.fileselect)
         self.a_folderselect.triggered.connect(self.folderselect)
         self.a_exit.triggered.connect(self.exit)
 
+        # button
         self.b_prev.clicked.connect(self.prev)
         self.b_next.clicked.connect(self.next)
 
+        # edit
+        self.a_togray.triggered.connect(self.togray)
+        self.a_zi.triggered.connect(self.zoomin)
+        self.a_zo.triggered.connect(self.zoomout)
+        self.a_rotate.triggered.connect(self.rotate)
+
     def fileselect(self):
+        global fileName
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getOpenFileName(self,
                                                   'Select File',
@@ -46,9 +54,10 @@ class ImageViewer(QMainWindow, form_class):
             if img.isNull():
                 QMessageBox.warnig(self, "Image Viewer", "Can't Load %s." % fileName)
                 return
-
         self.l_image.setPixmap(QPixmap.fromImage(img))
-        print(img)
+        self.scaleFactor = 1.0
+        self.b_prev.setEnabled(False)
+        self.b_next.setEnabled(False)
 
     def folderselect(self):
         self.folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
@@ -65,6 +74,7 @@ class ImageViewer(QMainWindow, form_class):
 
         self.idx = 0
         self.l_image.setPixmap(QPixmap.fromImage(self.imgs[self.idx]))
+        self.scaleFactor = 1.0
 
     def exit(self):
         reply = QMessageBox.question(self,
@@ -90,6 +100,38 @@ class ImageViewer(QMainWindow, form_class):
             self.l_image.setPixmap(QPixmap.fromImage(self.imgs[self.idx]))
         else:
             QMessageBox.warning(self, 'Sorry', 'No more images!')
+
+    def togray(self):
+        global fileName
+        img = cv2.imread(fileName)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        r_img = img[:,:,0]
+        g_img = img[:,:,1]
+        b_img = img[:,:,2]
+        imgGray = 0.21*r_img + 0.72*g_img + 0.07*b_img
+        img[:, :, 0] = imgGray
+        img[:, :, 1] = imgGray
+        img[:, :, 2] = imgGray
+        img = QImage(img, img.shape[1], img.shape[0], img.shape[1]*3, QImage.Format_RGB888).scaled(640, 640,  Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        self.qPixmapVar = QPixmap(img)
+        self.l_image.setPixmap(self.qPixmapVar)
+
+    def rotate(self):
+        global fileName
+        angle = 90
+        self.pixmap = QPixmap(fileName).scaled(640, 640, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        rotated = self.pixmap.transformed(QTransform().rotate(angle))
+        self.l_image.setPixmap(rotated)
+
+    def zoomin(self):
+        self.sclaleImage(1.25)
+
+    def zoomout(self):
+        self.scaleImage(0.75)
+
+    def scaleImage(self, factor):
+        global fileName
+        self.scaleFactor *= factor
 
 
 app = QApplication(sys.argv)
