@@ -89,9 +89,9 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="a_togray"/>
-    <addaction name="a_zi"/>
-    <addaction name="a_zo"/>
     <addaction name="a_rotate"/>
+    <addaction name="a_crop"/>
+    <addaction name="a_original"/>
    </widget>
    <addaction name="m_file"/>
    <addaction name="m_edit"/>
@@ -143,6 +143,16 @@
   <action name="a_rotate">
    <property name="text">
     <string>Rotate 90</string>
+   </property>
+  </action>
+  <action name="a_crop">
+   <property name="text">
+    <string>Crop</string>
+   </property>
+  </action>
+  <action name="a_original">
+   <property name="text">
+    <string>Original</string>
    </property>
   </action>
  </widget>
