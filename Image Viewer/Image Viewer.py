@@ -5,6 +5,7 @@ from PyQt5.uic import loadUiType
 import sys
 import cv2
 import os
+import glob
 
 form_class = loadUiType("Image Viewer.ui")[0]
 valid_format = (".PNG", ".JPEG", ".JPG", ".BMP", ".GIF")
@@ -65,16 +66,20 @@ class ImageViewer(QMainWindow, form_class):
         self.b_next.setEnabled(False)
 
     def folderselect(self):
-        self.folder = QFileDialog.getExistingDirectory(self, "Select Directory")
-        self.logs = getImgs(self.folder)
+        directory = QFileDialog.getExistingDirectory(self, "Select Directory")
+        self.logs = getImgs(directory)
         self.numImgs = len(self.logs)
-        self.imgs = []
-        for file in self.logs:
-            self.img = cv2.imread(file)
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
-            self.imgs.append(self.img)
-
-        self.image2Label(self.imgs[self.idx])
+        # ['C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_0782.jpg',
+        #  'C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_0783.jpg',
+        #  'C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_2189.JPG',
+        #  'C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_5186.jpg',
+        #  'C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_5232.jpg']
+        self.img = cv2.imread(self.logs[self.idx])
+        self.img_height_origin = self.img.shape[0]
+        self.img_width_origin = self.img.shape[1]
+        self.qPixmapVar = QPixmap(self.file2QImage(self.logs[self.idx]))
+        self.qPixmapVar = self.qPixmapVar.scaled(self.hh, self.ww, aspectRatioMode=True)
+        self.l_image.setPixmap(self.qPixmapVar)
 
     def exit(self):
         reply = QMessageBox.question(self,
@@ -90,30 +95,30 @@ class ImageViewer(QMainWindow, form_class):
     def prev(self):
         if self.idx > 0:
             self.idx -= 1
-            self.image2Label(self.imgs[self.idx])
+            self.qPixmapVar = QPixmap(self.file2QImage(self.logs[self.idx]))
+            self.qPixmapVar = self.qPixmapVar.scaled(self.hh, self.ww, aspectRatioMode=True)
+            self.l_image.setPixmap(self.qPixmapVar)
         else:
             QMessageBox.warning(self, 'Sorry', 'No more images!')
 
     def next(self):
         if self.idx < self.numImgs-1:
             self.idx += 1
-            self.image2Label(self.imgs[self.idx])
+            self.qPixmapVar = QPixmap(self.file2QImage(self.logs[self.idx]))
+            self.qPixmapVar = self.qPixmapVar.scaled(self.hh, self.ww, aspectRatioMode=True)
+            self.l_image.setPixmap(self.qPixmapVar)
         else:
             QMessageBox.warning(self, 'Sorry', 'No more images!')
 
     def togray(self):
-        img = cv2.imread(self.fileName)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        r_img = img[:,:,0]
-        g_img = img[:,:,1]
-        b_img = img[:,:,2]
+        r_img = self.img[:,:,0]
+        g_img = self.img[:,:,1]
+        b_img = self.img[:,:,2]
         imgGray = 0.21*r_img + 0.72*g_img + 0.07*b_img
-        img[:, :, 0] = imgGray
-        img[:, :, 1] = imgGray
-        img[:, :, 2] = imgGray
-        img = QImage(img, img.shape[1], img.shape[0], img.shape[1]*3, QImage.Format_RGB888).scaled(self.hh, self.ww,  aspectRatioMode=True)
-        self.qPixmapVar = QPixmap(img)
-        self.l_image.setPixmap(self.qPixmapVar)
+        self.img[:, :, 0] = imgGray
+        self.img[:, :, 1] = imgGray
+        self.img[:, :, 2] = imgGray
+        self.image2Label(self.img)
 
     def rotate(self):
         angle = 90
@@ -168,8 +173,8 @@ class ImageViewer(QMainWindow, form_class):
             cut_end_y = int(self.img_height_origin * self.selEnd.y() / self.img_height_tran)
             # print(cut_begin_x, cut_begin_y, cut_end_x, cut_end_y)
 
-            self.img = cv2.imread(self.fileName)
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+            # self.img = cv2.imread(self.fileName)
+            # self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
             self.img = self.img[cut_begin_y:cut_end_y, cut_begin_x:cut_end_x, :].astype("uint8")
             self.image2Label(self.img)
             self.cropEnable = False
