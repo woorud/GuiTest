@@ -5,7 +5,6 @@ from PyQt5.uic import loadUiType
 import sys
 import cv2
 import os
-import glob
 
 form_class = loadUiType("Image Viewer.ui")[0]
 valid_format = (".PNG", ".JPEG", ".JPG", ".BMP", ".GIF")
@@ -75,11 +74,11 @@ class ImageViewer(QMainWindow, form_class):
         #  'C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_5186.jpg',
         #  'C:/Users/82102/Desktop/woorud/Github/GuiTest/picture\\IMG_5232.jpg']
         self.img = cv2.imread(self.logs[self.idx])
+        self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
         self.img_height_origin = self.img.shape[0]
         self.img_width_origin = self.img.shape[1]
-        self.qPixmapVar = QPixmap(self.file2QImage(self.logs[self.idx]))
-        self.qPixmapVar = self.qPixmapVar.scaled(self.hh, self.ww, aspectRatioMode=True)
-        self.l_image.setPixmap(self.qPixmapVar)
+        self.image2Label(self.img)
+
 
     def exit(self):
         reply = QMessageBox.question(self,
@@ -95,18 +94,20 @@ class ImageViewer(QMainWindow, form_class):
     def prev(self):
         if self.idx > 0:
             self.idx -= 1
-            self.qPixmapVar = QPixmap(self.file2QImage(self.logs[self.idx]))
-            self.qPixmapVar = self.qPixmapVar.scaled(self.hh, self.ww, aspectRatioMode=True)
-            self.l_image.setPixmap(self.qPixmapVar)
+            self.img = cv2.imread(self.logs[self.idx])
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+            self.fileName = self.logs[self.idx]
+            self.image2Label(self.img)
         else:
             QMessageBox.warning(self, 'Sorry', 'No more images!')
 
     def next(self):
         if self.idx < self.numImgs-1:
             self.idx += 1
-            self.qPixmapVar = QPixmap(self.file2QImage(self.logs[self.idx]))
-            self.qPixmapVar = self.qPixmapVar.scaled(self.hh, self.ww, aspectRatioMode=True)
-            self.l_image.setPixmap(self.qPixmapVar)
+            self.img = cv2.imread(self.logs[self.idx])
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+            self.fileName = self.logs[self.idx]
+            self.image2Label(self.img)
         else:
             QMessageBox.warning(self, 'Sorry', 'No more images!')
 
@@ -121,10 +122,8 @@ class ImageViewer(QMainWindow, form_class):
         self.image2Label(self.img)
 
     def rotate(self):
-        angle = 90
-        self.pixmap = QPixmap(self.fileName).scaled(self.hh, self.ww, aspectRatioMode=True)
-        rotated = self.pixmap.transformed(QTransform().rotate(angle))
-        self.l_image.setPixmap(rotated)
+        self.img = cv2.rotate(self.img, cv2.ROTATE_90_CLOCKWISE)
+        self.image2Label(self.img)
 
     def crop(self):
         self.cropEnable = True
